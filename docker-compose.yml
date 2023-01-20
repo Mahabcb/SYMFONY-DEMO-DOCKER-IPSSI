@@ -1,0 +1,40 @@
+version: '3'
+services:
+  symfony:
+    build: .
+    container_name: symfony
+    ports:
+      - "8741:80"
+    networks:
+      - dev
+
+  database:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: symfony
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - "3306:3306"
+    depends_on:
+      - symfony
+    networks:
+      - dev
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    environment:
+      PMA_HOST: database
+      PMA_USER: user
+      PMA_PASSWORD: password
+    ports:
+      - "8181:81"
+    depends_on:
+      - database
+    networks:
+      - dev
+
+networks:
+  dev:
